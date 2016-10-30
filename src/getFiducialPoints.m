@@ -5,6 +5,7 @@ function [boundingBoxXYS, confidence, points] = getFiducialPoints(image)
 % Add the project path
 cwd = cd;
 cwd = [cwd '/../extra/CLASS_facepipe_VJ_29-Sep-08b'];
+addpath(cwd);
 addpath([cwd '/utils']);
 addpath([cwd '/facedet']);
 addpath([cwd '/facefeats']);
