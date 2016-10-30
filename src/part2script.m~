@@ -1,0 +1,24 @@
+
+
+imagefiles = dir('../data/George_W_Bush_warped/*.jpg');      
+nfiles = length(imagefiles);    % Number of files found
+for ii=1:nfiles
+   currentfilename = strcat('../data/George_W_Bush_warped/',imagefiles(ii).name);
+   currentimage = imread(currentfilename);
+   images(:,:,ii) = rgb2gray(currentimage);
+end
+
+[R,C] = size(images(:,:,1));
+
+ReIm = reshape(images,[R*C nfiles]);
+
+[output] = Rank4approx(double(ReIm'));
+
+ReIm4rank = reshape(output,[R C nfiles]);
+
+
+for ii=1:nfiles
+   imshow(uint8ReIm4rank(:,:,ii));
+   k = 0;
+end
+
