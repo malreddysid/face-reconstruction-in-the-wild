@@ -23,7 +23,7 @@ opts.desc.r=7;
 [DETS,PTS,~]=extfacedescs(opts,image,false);
 
 % Format the outputs
-points = PTS;
-confidence = DETS(4);
-boundingBoxXYS = DETS(1:3);
+points = PTS(:,:,1);
+confidence = DETS(4,1);
+boundingBoxXYS = DETS(1:3,1);
 end
