@@ -2,6 +2,8 @@
 
 load warpedFrontImages.mat
 
+nfiles = size(images, 3);
+
 [R,C] = size(images(:,:,1));
 
 ReIm = reshape(images,[R*C nfiles]);

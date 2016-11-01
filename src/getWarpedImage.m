@@ -35,7 +35,7 @@ normalPoints = ptCloud.Location;
 normalPoints_bar = sum(normalPoints, 1)./size(normalPoints,1);
 normalPoints_normed = normalPoints - repmat(normalPoints_bar,size(normalPoints,1),1);
 
-rotatedPoints = A*normalPoints_normed';
+rotatedPoints = D*R*normalPoints_normed';
 rotatedPoints = [rotatedPoints(1:2,:); normalPoints_normed(:,3)'];
 
 translatedPoints = rotatedPoints + [repmat(q_bar,1,size(normalPoints,1)); zeros(size(normalPoints,1),1)'];
@@ -59,7 +59,6 @@ affine_tform(4,4) = 1;
 
 tform = affine3d(affine_tform);
 ptCloudTransformed = pctransform(ptCloudWithColor, tform);
-pcshow(ptCloudTransformed);
 
 % Get the warped image from the point cloud.
 
@@ -71,12 +70,14 @@ min_y = min(finalPoints(:,2));
 finalPoints(:,1) = finalPoints(:,1) - min_x + 1;
 finalPoints(:,2) = finalPoints(:,2) - min_y + 1;
 
-max_x = uint8(max(finalPoints(:,1)));
-max_y = uint8(max(finalPoints(:,2)));
+finalPoints = floor(finalPoints);
+
+max_x = max(finalPoints(:,1));
+max_y = max(finalPoints(:,2));
 
 warpedImage = zeros(max_x, max_y, 3);
 for i = 1:size(finalPoints,1)
-    warpedImage(uint8(finalPoints(i,1)), uint8(finalPoints(i,2)), :) = finalPixelValues(i,:);
+    warpedImage(finalPoints(i,1), finalPoints(i,2), :) = finalPixelValues(i,:);
 end
 warpedImage = warpedImage/255;
 
