@@ -1,7 +1,7 @@
 % Script to test the functions
 
 %% getFiducialPoints
-image = imread('../data/George_W_Bush/George_W_Bush_0002.jpg');
+image = imread('../data/test1.jpg');
 [boundingBoxXYS, confidence, points] = getFiducialPoints(image);
 imshow(image);
 hold on;

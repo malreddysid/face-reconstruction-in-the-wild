@@ -1,4 +1,4 @@
-function [M] = rankFourApprox(M)
+function [M,S,L] = rankFourApprox(M)
 
 [U,D,V] = svd(M);
 
