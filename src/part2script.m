@@ -27,9 +27,11 @@ er = output - (L_re_est*S);
 n_er = sqrt(sum(er.^2, 2));
 th_map = zeros(nfiles,1);
 th_map(n_er < 10^-11) = 1;
+th_map = (th_map == 1);
 
 % selected images which only fall within the threshold
-M = ReIm(th_map);
+M = ReIm(th_map,:);
+M = double(M);
 [output,S,L] = rankFourApprox(M);
 
 
