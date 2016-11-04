@@ -1,12 +1,14 @@
 % Script to test the functions
 
 %% getFiducialPoints
-image = imread('../data/test1.jpg');
+%image = imread('../data/George_W_Bush/George_W_Bush_0002.jpg');
+image = imread('../data/test.jpg');
+image = imresize(image, [200,200]);
 [boundingBoxXYS, confidence, points] = getFiducialPoints(image);
 imshow(image);
 hold on;
 plot(points(1,:),points(2,:),'y+','markersize',10,'linewidth',2);
-hold off;
+%hold off;
 axis image;
 colormap gray;
 
