@@ -58,10 +58,10 @@ Template_sur = [ones(N,1) Top_norm]';
 A = Template_sur/Snew;
 
 L = L*pinv(A);
-S = A*S;
+%S = A*S;
 
 % Reshape S 
-S = reshape(S,[90*90 4]);
+S = reshape(S,[90 90 4]);
 
 
 
