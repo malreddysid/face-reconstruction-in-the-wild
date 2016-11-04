@@ -54,11 +54,14 @@ end
 Template_sur = [ones(N,1) Top_norm]';
 
 
-%Ambiguity recovery
+% Ambiguity recovery
 A = Template_sur/Snew;
 
 L = L*pinv(A);
 S = A*S;
+
+% Reshape S 
+S = reshape(S,[90*90 4]);
 
 
 
