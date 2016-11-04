@@ -2,3 +2,7 @@
 data/test.jpg
 
 data/test1.jpg
+
+*.m~
+
+data/test1.jpg
