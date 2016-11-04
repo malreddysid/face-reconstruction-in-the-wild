@@ -7,8 +7,9 @@ nfiles = size(images, 3);
 [R,C] = size(images(:,:,1));
 
 ReIm = reshape(images,[R*C nfiles]);
+ReIm = ReIm';
 
-[output,S,L] = rankFourApprox(double(ReIm'));
+[output,S,L] = rankFourApprox(double(ReIm));
 
 [ReIm4rank] = reshape(output',[R C nfiles]);
 
@@ -20,6 +21,18 @@ ReIm = reshape(images,[R*C nfiles]);
 
 % Re- estimating the Lighting matrix%
 L_re_est = output/S;
+
+% thresholding
+er = output - (L_re_est*S);
+n_er = sqrt(sum(er.^2, 2));
+th_map = zeros(nfiles,1);
+th_map(n_er < 10^-11) = 1;
+
+% selected images which only fall within the threshold
+M = ReIm(th_map);
+[output,S,L] = rankFourApprox(M);
+
+
 
 % Template surface
 A = pcread('template_cropped.ply');

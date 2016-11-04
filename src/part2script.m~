@@ -8,7 +8,7 @@ nfiles = size(images, 3);
 
 ReIm = reshape(images,[R*C nfiles]);
 
-[output,S] = rankFourApprox(double(ReIm'));
+[output,S,L] = rankFourApprox(double(ReIm'));
 
 [ReIm4rank] = reshape(output',[R C nfiles]);
 
@@ -20,6 +20,17 @@ ReIm = reshape(images,[R*C nfiles]);
 
 % Re- estimating the Lighting matrix%
 L_re_est = output/S;
+
+% thresholding
+er = output - (L_re_est*S);
+n_er = sqrt(sum(er.^2, 2));
+th_map = zeros(nfiles,1);
+th_map(n_er < 10^-11) = 1;
+
+M(th_map) = M;
+[output,S,L] = rankFourApprox(double(ReIm');
+
+
 
 % Template surface
 A = pcread('template_cropped.ply');
@@ -44,7 +55,7 @@ for x = 1:90
     for y = 1:90
         if(map(x,y,1)>0)
             Top_norm(count,:) = B(map(x,y,1),:);
-            Snew(:,count) = S(:,y+x);
+            Snew(:,count) = S(:,y+(x-1)*90);
             count = count + 1;
         end
     end
@@ -54,11 +65,14 @@ end
 Template_sur = [ones(N,1) Top_norm]';
 
 
-%Ambiguity recovery
-A = Template_sur/S;
+% Ambiguity recovery
+A = Template_sur/Snew;
 
 L = L*pinv(A);
-S = A*S;
+%S = A*S;
+
+% Reshape S 
+S = reshape(S,[90 90 4]);
 
 
 
