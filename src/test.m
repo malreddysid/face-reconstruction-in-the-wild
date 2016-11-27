@@ -1,13 +1,12 @@
 % Script to test the functions
 
 %% getFiducialPoints
-%image = imread('../data/George_W_Bush/George_W_Bush_0002.jpg');
-image = imread('../data/test.jpg');
-image = imresize(image, [200,200]);
-[boundingBoxXYS, confidence, points] = getFiducialPoints(image);
+image = imread('../data/George_W_Bush/George_W_Bush_0001.jpg');
+%image = imresize(image, [200,200]);
+[boundingBoxXYS, ppoints, confidence, sucess] = getFiducialPoints(image);
 imshow(image);
 hold on;
-plot(points(1,:),points(2,:),'y+','markersize',10,'linewidth',2);
+plot(ppoints(1,:),ppoints(2,:),'y+','markersize',10,'linewidth',2);
 %hold off;
 axis image;
 colormap gray;
@@ -17,10 +16,27 @@ colormap gray;
 saveTemplateCoordinates;
 
 load('templateCoordinates.mat');
+ptCloud = pcread('face_mesh_000306.ply');
+points = UpsamplePtCloud(ptCloud);
+p1 = min(points(:,1));
+p2 = min(points(:,2));
+p3 = min(points(:,3));
+points(:,1) = points(:,1) - p1;
+points(:,2) = points(:,2) - p2;
+points(:,3) = points(:,3) - p3;
+templateCoordinates(:,1) = templateCoordinates(:,1) - p1;
+templateCoordinates(:,2) = templateCoordinates(:,2) - p2;
+templateCoordinates(:,3) = templateCoordinates(:,3) - p3;
+points(:,1) = points(:,1)/2;
+points(:,2) = points(:,2)/2;
+points(:,3) = points(:,3)/2;
+templateCoordinates(:,1) = templateCoordinates(:,1)/2;
+templateCoordinates(:,2) = templateCoordinates(:,2)/2;
+templateCoordinates(:,3) = templateCoordinates(:,3)/2;
+warpedImage = getWarpedImage(image, ppoints, points, templateCoordinates);
 
-warpedImage = getWarpedImage(image, points, 'template.ply', templateCoordinates);
-
-imshow(warpedImage);
+figure;
+imshow(warpedImage/255);
 
 %{
 q = points;

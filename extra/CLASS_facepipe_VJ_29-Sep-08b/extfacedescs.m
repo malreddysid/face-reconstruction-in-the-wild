@@ -1,5 +1,6 @@
-function [DETS,PTS,DESCS]=extfacedescs(opts,img,debug)
+function [DETS,PTS,DESCS, success]=extfacedescs(opts,img,debug)
 
+success = true;
 if nargin<3
     debug=false;
 end
@@ -8,9 +9,9 @@ if debug
     figure(1);
     clf('reset');
     set(gcf,'doublebuffer','on');
-    %figure(2);
-    %clf('reset');
-    %set(gcf,'doublebuffer','on');
+    figure(2);
+    clf('reset');
+    set(gcf,'doublebuffer','on');
 end
 
 if ischar(img)
@@ -25,6 +26,26 @@ else
     I=img;
     DETS=runfacedet(I);
 end
+
+detector = vision.CascadeObjectDetector();
+
+BB = step(detector,I);
+if(size(BB, 1) == 0)
+    fprintf('Warning: img returned 0 in size(BB). Not doing anything\n');
+    DETS = 0;
+    PTS = 0;
+    DESCS = 0;
+    success = false;
+    return;
+end
+BB = BB(1,:);
+temp = BB(2);
+BB(2) = BB(1) + BB(3);
+BB(3) = temp;
+BB(4) = BB(4) + temp; 
+BB = BB';
+DETS=[(BB(1,:)+BB(2,:))/2 ; (BB(3,:)+BB(4,:))/2 ; (BB(2,:)-BB(1,:))/2];
+DETS(4,:)=1;
 
 PTS=zeros(0,0,size(DETS,2));
 DESCS=zeros(0,size(DETS,2));
@@ -41,13 +62,13 @@ for i=1:size(DETS,2)
         hold off;
         axis image;
         colormap gray;
-        %figure(2);
+        figure(2);
     end
     
-    fd=extdesc(opts.desc,I,PTS(:,:,i),false);
+    fd=extdesc(opts.desc,I,PTS(:,:,i),debug);
     DESCS(1:numel(fd),i)=fd;
     
-    if 0
+    if debug
         drawnow;
         if i+1<size(DETS,2)
             pause;
