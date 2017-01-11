@@ -1,4 +1,4 @@
-# moving-face-3d-reconstruction
+
 Implementation of the paper - Face Reconstruction in the Wild
 
 ## Setup
